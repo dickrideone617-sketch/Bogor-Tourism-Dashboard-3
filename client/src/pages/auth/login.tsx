@@ -64,8 +64,8 @@ export default function LoginPage() {
               </Button>
             </form>
           </CardContent>
-          <CardFooter className="flex justify-center text-xs text-muted-foreground">
-            &copy; 2026 Dinas Kebudayaan dan Pariwisata Kab. Bogor
+          <CardFooter className="flex justify-center text-center text-xs text-muted-foreground px-6">
+            &copy; 2026 DINAS PARIWISATA DAN EKONOMI KREATIF KABUPATEN BOGOR
           </CardFooter>
         </Card>
       </div>

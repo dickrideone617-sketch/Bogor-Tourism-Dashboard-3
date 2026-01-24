@@ -30,7 +30,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       id: "1",
       username,
       role,
-      name: username === "superadmin" ? "Super Administrator" : username === "admin" ? "Administrator" : "Staff Wisata",
+      name: username === "superadmin" ? "Super Administrator" : username === "admin" ? "Admin DISPARREKRAF" : "Staff Wisata",
       avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${username}`,
     };
     setUser(mockUser);
