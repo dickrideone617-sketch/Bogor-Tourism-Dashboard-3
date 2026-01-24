@@ -9,6 +9,7 @@ import OverviewPage from "@/pages/dashboard/overview";
 import SpotsPage from "@/pages/dashboard/spots";
 import AccommodationsPage from "@/pages/dashboard/accommodations";
 import AdminManagementPage from "@/pages/dashboard/admin-management";
+import AssistantPage from "@/pages/dashboard/assistant";
 import NotFound from "@/pages/not-found";
 
 function ProtectedRoute({ component: Component, ...rest }: any) {
@@ -41,6 +42,10 @@ function Router() {
       
       <Route path="/dashboard/accommodations">
         {() => <ProtectedRoute component={AccommodationsPage} />}
+      </Route>
+
+      <Route path="/dashboard/assistant">
+        {() => <ProtectedRoute component={AssistantPage} />}
       </Route>
 
       <Route path="/dashboard/reports">

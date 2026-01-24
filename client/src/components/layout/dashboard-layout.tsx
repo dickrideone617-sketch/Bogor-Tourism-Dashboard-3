@@ -10,6 +10,7 @@ import {
   Hotel,
   Users,
   Menu,
+  Bot,
   X
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -27,6 +28,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     { name: "Overview", href: "/dashboard", icon: LayoutDashboard },
     { name: "Objek Wisata", href: "/dashboard/spots", icon: Mountain },
     { name: "Akomodasi", href: "/dashboard/accommodations", icon: Hotel },
+    { name: "AI Assistant", href: "/dashboard/assistant", icon: Bot },
     { name: "Laporan", href: "/dashboard/reports", icon: FileText },
   ];
 
