@@ -31,8 +31,8 @@ export default function LoginPage() {
             <div className="mx-auto bg-primary/10 p-3 rounded-full w-fit mb-2">
               <Mountain className="w-8 h-8 text-primary" />
             </div>
-            <CardTitle className="text-2xl font-bold text-primary">SIP Bogor</CardTitle>
-            <CardDescription>Sistem Informasi Pariwisata Kabupaten Bogor</CardDescription>
+            <CardTitle className="text-xl font-bold text-primary">Dinas Pariwisata dan Ekonomi Kreatif</CardTitle>
+            <CardDescription>Kabupaten Bogor</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleLogin} className="space-y-4">

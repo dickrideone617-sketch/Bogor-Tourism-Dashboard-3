@@ -37,12 +37,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const SidebarContent = () => (
     <div className="flex flex-col h-full bg-sidebar border-r border-sidebar-border text-sidebar-foreground">
       <div className="p-6 flex items-center gap-3 border-b border-sidebar-border/50">
-        <div className="bg-primary p-2 rounded-lg text-white">
+        <div className="bg-primary p-2 rounded-lg text-white shrink-0">
           <Mountain size={20} />
         </div>
-        <div>
-          <h1 className="font-bold text-lg leading-tight">SIP Bogor</h1>
-          <p className="text-xs text-muted-foreground">Dashboard Wisata</p>
+        <div className="min-w-0">
+          <h1 className="font-bold text-[10px] leading-tight uppercase">Dinas Pariwisata &</h1>
+          <p className="text-[10px] font-bold leading-tight uppercase">Ekonomi Kreatif</p>
+          <p className="text-[9px] text-muted-foreground">Kabupaten Bogor</p>
         </div>
       </div>
 
