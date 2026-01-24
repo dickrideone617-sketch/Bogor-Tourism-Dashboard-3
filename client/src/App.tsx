@@ -10,6 +10,8 @@ import SpotsPage from "@/pages/dashboard/spots";
 import AccommodationsPage from "@/pages/dashboard/accommodations";
 import AdminManagementPage from "@/pages/dashboard/admin-management";
 import AssistantPage from "@/pages/dashboard/assistant";
+import CulinaryPage from "@/pages/dashboard/culinary";
+import ReportsPage from "@/pages/dashboard/reports";
 import NotFound from "@/pages/not-found";
 
 function ProtectedRoute({ component: Component, ...rest }: any) {
@@ -48,8 +50,12 @@ function Router() {
         {() => <ProtectedRoute component={AssistantPage} />}
       </Route>
 
+      <Route path="/dashboard/culinary">
+        {() => <ProtectedRoute component={CulinaryPage} />}
+      </Route>
+
       <Route path="/dashboard/reports">
-        {() => <ProtectedRoute component={() => <div className="text-2xl font-bold text-muted-foreground p-10">Halaman Laporan (Coming Soon)</div>} />}
+        {() => <ProtectedRoute component={ReportsPage} />}
       </Route>
       
       <Route path="/dashboard/admin">
