@@ -1,18 +1,18 @@
 import { Link, useLocation } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
-import { 
-  LayoutDashboard, 
-  Map, 
-  FileText, 
-  Settings, 
-  LogOut, 
-  Mountain, 
+import {
+  LayoutDashboard,
+  Map,
+  FileText,
+  Settings,
+  LogOut,
+  Mountain,
   Hotel,
   Users,
   Menu,
   Bot,
   Utensils,
-  X
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -20,7 +20,11 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const { user, logout } = useAuth();
   const [location] = useLocation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -35,7 +39,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   ];
 
   if (user?.role === "superadmin") {
-    navigation.push({ name: "Kelola Admin", href: "/dashboard/admin", icon: Users });
+    navigation.push({
+      name: "Kelola Admin",
+      href: "/dashboard/admin",
+      icon: Users,
+    });
   }
 
   const SidebarContent = () => (
@@ -45,8 +53,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <Mountain size={20} />
         </div>
         <div className="min-w-0">
-          <h1 className="font-bold text-[10px] leading-tight uppercase">Dinas Pariwisata &</h1>
-          <p className="text-[10px] font-bold leading-tight uppercase">Ekonomi Kreatif</p>
+          <h1 className="font-bold text-[10px] leading-tight uppercase">
+            Dinas Pariwisata &
+          </h1>
+          <p className="text-[10px] font-bold leading-tight uppercase">
+            Ekonomi Kreatif
+          </p>
           <p className="text-[9px] text-muted-foreground">Kabupaten Bogor</p>
         </div>
       </div>
@@ -61,7 +73,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   "flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-colors cursor-pointer",
                   isActive
                     ? "bg-primary/10 text-primary"
-                    : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+                    : "text-muted-foreground hover:bg-secondary hover:text-foreground",
                 )}
               >
                 <item.icon size={18} />
@@ -76,14 +88,23 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <div className="flex items-center gap-3 mb-4">
           <Avatar className="h-9 w-9 border border-border">
             <AvatarImage src={user?.avatar} />
-            <AvatarFallback>{user?.username.slice(0, 2).toUpperCase()}</AvatarFallback>
+            <AvatarFallback>
+              {user?.username.slice(0, 2).toUpperCase()}
+            </AvatarFallback>
           </Avatar>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium truncate">{user?.name}</p>
-            <p className="text-xs text-muted-foreground truncate capitalize">{user?.role}</p>
+            <p className="text-xs text-muted-foreground truncate capitalize">
+              {user?.role}
+            </p>
           </div>
         </div>
-        <Button variant="outline" size="sm" className="w-full justify-start gap-2 text-destructive hover:text-destructive hover:bg-destructive/10" onClick={logout}>
+        <Button
+          variant="outline"
+          size="sm"
+          className="w-full justify-start gap-2 text-destructive hover:text-destructive hover:bg-destructive/10"
+          onClick={logout}
+        >
           <LogOut size={16} />
           Keluar
         </Button>
@@ -100,23 +121,42 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
       {/* Mobile Sidebar */}
       <Sheet open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
-        <SheetContent side="left" className="p-0 w-64 border-r border-sidebar-border">
+        <SheetContent
+          side="left"
+          className="p-0 w-64 border-r border-sidebar-border"
+        >
           <SidebarContent />
         </SheetContent>
       </Sheet>
 
       <div className="flex-1 lg:ml-64 flex flex-col min-h-screen transition-all duration-300 ease-in-out">
         <header className="sticky top-0 z-40 h-16 bg-white/80 backdrop-blur-md border-b flex items-center px-4 lg:px-8 justify-between lg:justify-end">
-          <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setIsSidebarOpen(true)}>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="lg:hidden"
+            onClick={() => setIsSidebarOpen(true)}
+          >
             <Menu className="h-5 w-5" />
           </Button>
-          
+
           <div className="flex items-center gap-4">
             <div className="hidden md:flex flex-col items-end mr-2">
-              <span className="text-xs font-medium text-muted-foreground">{new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</span>
+              <span className="text-xs font-medium text-muted-foreground">
+                {new Date().toLocaleDateString("id-ID", {
+                  weekday: "long",
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
+                })}
+              </span>
             </div>
             <div className="h-8 w-[1px] bg-border hidden md:block" />
-            <Button variant="ghost" size="icon" className="text-muted-foreground">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-muted-foreground"
+            >
               <Settings className="h-5 w-5" />
             </Button>
           </div>
