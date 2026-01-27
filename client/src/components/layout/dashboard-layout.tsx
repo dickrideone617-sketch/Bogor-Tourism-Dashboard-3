@@ -12,6 +12,7 @@ import {
   Menu,
   Bot,
   Utensils,
+  Lightbulb,
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -32,8 +33,9 @@ export default function DashboardLayout({
   const navigation = [
     { name: "Overview", href: "/dashboard", icon: LayoutDashboard },
     { name: "Objek Wisata", href: "/dashboard/spots", icon: Mountain },
-    { name: "Cafe & Resto", href: "/dashboard/culinary", icon: Utensils },
     { name: "Akomodasi", href: "/dashboard/accommodations", icon: Hotel },
+    { name: "Ekonomi Kreatif", href: "/dashboard/creative-economy", icon: Lightbulb },
+    { name: "Cafe & Resto", href: "/dashboard/culinary", icon: Utensils },
     { name: "AI Assistant", href: "/dashboard/assistant", icon: Bot },
     { name: "Laporan", href: "/dashboard/reports", icon: FileText },
   ];

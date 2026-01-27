@@ -11,6 +11,7 @@ import AccommodationsPage from "@/pages/dashboard/accommodations";
 import AdminManagementPage from "@/pages/dashboard/admin-management";
 import AssistantPage from "@/pages/dashboard/assistant";
 import CulinaryPage from "@/pages/dashboard/culinary";
+import CreativeEconomyPage from "@/pages/dashboard/creative-economy";
 import ReportsPage from "@/pages/dashboard/reports";
 import NotFound from "@/pages/not-found";
 
@@ -44,6 +45,10 @@ function Router() {
       
       <Route path="/dashboard/accommodations">
         {() => <ProtectedRoute component={AccommodationsPage} />}
+      </Route>
+
+      <Route path="/dashboard/creative-economy">
+        {() => <ProtectedRoute component={CreativeEconomyPage} />}
       </Route>
 
       <Route path="/dashboard/assistant">

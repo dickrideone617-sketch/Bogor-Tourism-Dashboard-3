@@ -17,7 +17,9 @@ import {
   MoreHorizontal, 
   Filter, 
   Mountain,
-  MapPin
+  MapPin,
+  BarChart3,
+  TrendingUp
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -47,6 +49,8 @@ import {
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts";
 
 // Data Constants
 const KECAMATAN_LIST = [
@@ -65,6 +69,15 @@ const SPOT_CATEGORIES = [
 
 const STATUS_LIST = ["Active", "Maintenance", "Closed"];
 
+const MONTHLY_REPORTS = [
+  { month: "Jan", visitors: 45000 },
+  { month: "Feb", visitors: 52000 },
+  { month: "Mar", visitors: 48000 },
+  { month: "Apr", visitors: 61000 },
+  { month: "May", visitors: 75000 },
+  { month: "Jun", visitors: 89000 },
+];
+
 // Mock Data
 const INITIAL_SPOTS = [
   { id: "1", name: "Kebun Raya Bogor", category: "Alam", kecamatan: "Bogor Tengah", address: "Jl. Ir. H. Juanda No.13", visitors: "150,000", status: "Active" },
@@ -80,6 +93,7 @@ export default function SpotsPage() {
   const [filterKecamatan, setFilterKecamatan] = useState<string | null>(null);
   const [filterCategory, setFilterCategory] = useState<string | null>(null);
   const [isAddOpen, setIsAddOpen] = useState(false);
+  const [showReport, setShowReport] = useState(false);
   const { toast } = useToast();
 
   const filteredData = data.filter((item) => {
@@ -120,12 +134,48 @@ export default function SpotsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-2">
-        <h1 className="text-3xl font-bold tracking-tight">Manajemen Objek Wisata</h1>
-        <p className="text-muted-foreground">
-          Kelola data tempat wisata, rekreasi, dan destinasi unggulan.
-        </p>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div className="flex flex-col gap-2">
+          <h1 className="text-3xl font-bold tracking-tight">Manajemen Objek Wisata</h1>
+          <p className="text-muted-foreground">
+            Kelola data tempat wisata, rekreasi, dan destinasi unggulan.
+          </p>
+        </div>
+        <Button variant="outline" onClick={() => setShowReport(!showReport)} className="gap-2">
+          <BarChart3 className="h-4 w-4" />
+          {showReport ? "Tutup Laporan" : "Lihat Laporan Kunjungan"}
+        </Button>
       </div>
+
+      {showReport && (
+        <Card className="animate-in fade-in slide-in-from-top-4">
+          <CardHeader>
+            <CardTitle className="text-lg flex items-center gap-2">
+              <TrendingUp className="h-5 w-5 text-primary" />
+              Laporan Kunjungan Objek Wisata (Bulanan)
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="h-[300px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={MONTHLY_REPORTS}>
+                  <defs>
+                    <linearGradient id="colorVisits" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                  <XAxis dataKey="month" />
+                  <YAxis />
+                  <Tooltip />
+                  <Area type="monotone" dataKey="visitors" stroke="hsl(var(--primary))" fillOpacity={1} fill="url(#colorVisits)" />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       <div className="flex flex-col md:flex-row gap-4 justify-between items-start md:items-center bg-white p-4 rounded-lg border shadow-sm">
         <div className="flex flex-1 gap-2 w-full md:w-auto">
