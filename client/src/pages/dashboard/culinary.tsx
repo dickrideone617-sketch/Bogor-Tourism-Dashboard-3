@@ -20,7 +20,8 @@ import {
   Upload, 
   Coffee, 
   Utensils, 
-  Store 
+  Store,
+  BarChart3
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -239,6 +240,10 @@ export default function CulinaryPage() {
 
           <Button variant="outline" className="gap-2" onClick={handleImport}>
             <Upload className="h-4 w-4" /> Impor Excel
+          </Button>
+
+          <Button variant="outline" className="gap-2" onClick={() => toast({ title: "Membuka Laporan", description: "Mengarahkan ke halaman laporan statistik." })}>
+            <BarChart3 className="h-4 w-4" /> Laporan
           </Button>
 
           <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>

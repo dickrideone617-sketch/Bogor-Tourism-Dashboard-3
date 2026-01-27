@@ -1,11 +1,21 @@
 import { StatCard } from "@/components/dashboard/stat-card";
 import { VisitorChart } from "@/components/dashboard/visitor-chart";
 import { HeatmapGrid } from "@/components/dashboard/heatmap-grid";
-import { Users, MapPin, Hotel, TrendingUp } from "lucide-react";
+import { Users, MapPin, Hotel, TrendingUp, Download } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 
 export default function OverviewPage() {
+  const { toast } = useToast();
+
+  const handleExport = () => {
+    toast({
+      title: "Mengekspor Data",
+      description: "Data ringkasan statistik sedang disiapkan untuk diunduh.",
+    });
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -24,7 +34,9 @@ export default function OverviewPage() {
               <SelectItem value="2023">2023</SelectItem>
             </SelectContent>
           </Select>
-          <Button variant="outline" className="bg-white">Export</Button>
+          <Button variant="outline" className="bg-white gap-2" onClick={handleExport}>
+            <Download className="h-4 w-4" /> Export
+          </Button>
         </div>
       </div>
 

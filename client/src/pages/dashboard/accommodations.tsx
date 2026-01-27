@@ -139,10 +139,15 @@ export default function AccommodationsPage() {
             Data hotel, villa, resort, dan penginapan di Kabupaten Bogor.
           </p>
         </div>
-        <Button variant="outline" onClick={() => setShowReport(!showReport)} className="gap-2">
-          <BarChart3 className="h-4 w-4" />
-          {showReport ? "Tutup Laporan" : "Lihat Laporan Okupansi"}
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={() => toast({ title: "Mengunduh", description: "Data Akomodasi sedang diunduh." })} className="gap-2">
+            <Download className="h-4 w-4" /> Export
+          </Button>
+          <Button variant="outline" onClick={() => setShowReport(!showReport)} className="gap-2">
+            <BarChart3 className="h-4 w-4" />
+            {showReport ? "Tutup Laporan" : "Lihat Laporan Okupansi"}
+          </Button>
+        </div>
       </div>
 
       {showReport && (

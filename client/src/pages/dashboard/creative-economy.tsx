@@ -18,7 +18,8 @@ import {
   Filter, 
   Lightbulb,
   TrendingUp,
-  BarChart3
+  BarChart3,
+  Download
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -49,10 +50,20 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "recharts";
+import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts";
 
 const SECTORS = [
   "Fashion", "Kriya", "Kuliner", "Fotografi", "Musik", "Film & Animasi", "Aplikasi", "Desain Interior"
+];
+
+const KECAMATAN_LIST = [
+  "Babakan Madang", "Bojong Gede", "Caringin", "Cariu", "Ciampea", "Ciawi", 
+  "Cibinong", "Cibungbulang", "Cigombong", "Cigudeg", "Cijeruk", "Cileungsi", 
+  "Ciomas", "Cisarua", "Ciseeng", "Citeureup", "Dramaga", "Gunung Putri", 
+  "Gunung Sindur", "Jasinga", "Jonggol", "Kemang", "Klapanunggal", "Leuwiliang", 
+  "Leuwisadeng", "Megamendung", "Nanggung", "Pamijahan", "Parung", "Parung Panjang", 
+  "Rancabungur", "Rumpin", "Sukajaya", "Sukamakmur", "Sukaraja", "Tajurhalang", 
+  "Tamansari", "Tanjungsari", "Tenjo", "Tenjolaya"
 ];
 
 const INITIAL_DATA = [
@@ -76,6 +87,7 @@ export default function CreativeEconomyPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterSector, setFilterSector] = useState<string | null>(null);
   const [showReport, setShowReport] = useState(false);
+  const [isAddOpen, setIsAddOpen] = useState(false);
   const { toast } = useToast();
 
   const filteredData = data.filter((item) => {
@@ -85,6 +97,40 @@ export default function CreativeEconomyPage() {
     return matchesSearch && matchesSector;
   });
 
+  const handleDelete = (id: string) => {
+    setData(data.filter(item => item.id !== id));
+    toast({
+      title: "Berhasil",
+      description: "Data pelaku ekraf berhasil dihapus.",
+      variant: "destructive"
+    });
+  };
+
+  const handleAddSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const formData = new FormData(e.target as HTMLFormElement);
+    const newItem = {
+      id: Date.now().toString(),
+      name: formData.get("name") as string,
+      sector: formData.get("sector") as string,
+      kecamatan: formData.get("kecamatan") as string,
+      owner: formData.get("owner") as string,
+      employees: parseInt(formData.get("employees") as string) || 0,
+      revenue: `Rp ${formData.get("revenue")}jt/bln`,
+    };
+    
+    setData([...data, newItem]);
+    setIsAddOpen(false);
+    toast({ title: "Berhasil", description: "Pelaku Ekraf baru berhasil ditambahkan" });
+  };
+
+  const handleDownload = () => {
+    toast({
+      title: "Mengunduh",
+      description: "Data Ekonomi Kreatif sedang diunduh dalam format Excel.",
+    });
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -92,10 +138,15 @@ export default function CreativeEconomyPage() {
           <h1 className="text-3xl font-bold tracking-tight">Ekonomi Kreatif</h1>
           <p className="text-muted-foreground">Data pelaku usaha ekonomi kreatif Kabupaten Bogor.</p>
         </div>
-        <Button variant="outline" onClick={() => setShowReport(!showReport)} className="gap-2">
-          <BarChart3 className="h-4 w-4" />
-          {showReport ? "Tutup Laporan" : "Lihat Laporan Kunjungan"}
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={handleDownload} className="gap-2">
+            <Download className="h-4 w-4" /> Export
+          </Button>
+          <Button variant="outline" onClick={() => setShowReport(!showReport)} className="gap-2">
+            <BarChart3 className="h-4 w-4" />
+            {showReport ? "Tutup Laporan" : "Lihat Laporan"}
+          </Button>
+        </div>
       </div>
 
       {showReport && (
@@ -152,14 +203,72 @@ export default function CreativeEconomyPage() {
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-        <Button className="gap-2">
-          <Plus className="h-4 w-4" /> Tambah Pelaku Ekraf
-        </Button>
+        
+        <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
+          <DialogTrigger asChild>
+            <Button className="gap-2">
+              <Plus className="h-4 w-4" /> Tambah Pelaku Ekraf
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle>Tambah Pelaku Ekraf</DialogTitle>
+              <DialogDescription>Masukkan data pelaku ekonomi kreatif baru.</DialogDescription>
+            </DialogHeader>
+            <form onSubmit={handleAddSubmit} className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label htmlFor="name">Nama Usaha</Label>
+                <Input id="name" name="name" required />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="sector">Sektor</Label>
+                  <Select name="sector" required>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Pilih Sektor" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {SECTORS.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="kecamatan">Kecamatan</Label>
+                  <Select name="kecamatan" required>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Pilih Kecamatan" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {KECAMATAN_LIST.map(k => <SelectItem key={k} value={k}>{k}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="owner">Nama Pemilik</Label>
+                <Input id="owner" name="owner" required />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="employees">Jumlah Karyawan</Label>
+                  <Input id="employees" name="employees" type="number" required />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="revenue">Omzet (Juta/Bln)</Label>
+                  <Input id="revenue" name="revenue" type="number" required />
+                </div>
+              </div>
+              <DialogFooter>
+                <Button type="submit">Simpan</Button>
+              </DialogFooter>
+            </form>
+          </DialogContent>
+        </Dialog>
       </div>
 
-      <div className="rounded-md border bg-white shadow-sm">
+      <div className="rounded-md border bg-white shadow-sm overflow-hidden">
         <Table>
-          <TableHeader>
+          <TableHeader className="bg-secondary/20">
             <TableRow>
               <TableHead>Nama Usaha</TableHead>
               <TableHead>Sektor</TableHead>
@@ -167,7 +276,7 @@ export default function CreativeEconomyPage() {
               <TableHead>Kecamatan</TableHead>
               <TableHead>Karyawan</TableHead>
               <TableHead>Omzet</TableHead>
-              <TableHead className="w-[50px]"></TableHead>
+              <TableHead className="w-[80px]"></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -180,7 +289,18 @@ export default function CreativeEconomyPage() {
                 <TableCell>{row.employees}</TableCell>
                 <TableCell>{row.revenue}</TableCell>
                 <TableCell>
-                  <Button variant="ghost" size="icon"><MoreHorizontal className="h-4 w-4" /></Button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon"><MoreHorizontal className="h-4 w-4" /></Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem><Pencil className="mr-2 h-4 w-4" /> Edit</DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem className="text-destructive" onClick={() => handleDelete(row.id)}>
+                        <Trash2 className="mr-2 h-4 w-4" /> Hapus
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </TableCell>
               </TableRow>
             ))}
