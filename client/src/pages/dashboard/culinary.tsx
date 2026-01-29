@@ -51,9 +51,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 
-// Data Constants
 const KECAMATAN_LIST = [
   "Babakan Madang", "Bojong Gede", "Caringin", "Cariu", "Ciampea", "Ciawi", 
   "Cibinong", "Cibungbulang", "Cigombong", "Cigudeg", "Cijeruk", "Cileungsi", 
@@ -70,18 +68,14 @@ const KATEGORI_LIST = [
   { id: "warung", label: "Warung", icon: Store },
 ];
 
-const STATUS_USAHA = ["Aktif", "Tutup", "Musiman"];
-const SKALA_USAHA = ["UMKM", "Menengah", "Besar"];
-const SUMBER_DATA = ["Lapangan", "OSS", "Asosiasi", "Desa"];
-
-// Mock Data
 const INITIAL_DATA = [
-  { id: "1", name: "Kopi Nako", category: "Kafe", kecamatan: "Cibinong", address: "Jl. Mayor Oking", status: "Aktif", scale: "Menengah", source: "Lapangan", rating: 4.5 },
-  { id: "2", name: "RM Bumi Aki", category: "Restoran", kecamatan: "Cisarua", address: "Jl. Raya Puncak", status: "Aktif", scale: "Besar", source: "Asosiasi", rating: 4.8 },
-  { id: "3", name: "Warung Sate Shinta", category: "Warung", kecamatan: "Megamendung", address: "Jl. Raya Cipanas", status: "Aktif", scale: "UMKM", source: "Lapangan", rating: 4.3 },
-  { id: "4", name: "Starbucks Sentul", category: "Kafe", kecamatan: "Babakan Madang", address: "Sentul City", status: "Aktif", scale: "Besar", source: "OSS", rating: 4.6 },
-  { id: "5", name: "Cimory Riverside", category: "Restoran", kecamatan: "Megamendung", address: "Jl. Raya Puncak", status: "Aktif", scale: "Besar", source: "OSS", rating: 4.7 },
-  { id: "6", name: "Bakso Boedjangan", category: "Restoran", kecamatan: "Cibinong", address: "Cibinong City Mall", status: "Tutup", scale: "Menengah", source: "Desa", rating: 4.0 },
+  { id: "1", name: "Barcelona The Glass House", category: "Kafe", kecamatan: "Bogor Tengah", address: "Jl. Pajajaran Indah Raya No.2", status: "Aktif", scale: "Besar", source: "Internet", rating: 4.8 },
+  { id: "2", name: "Kopi Daong", category: "Kafe", kecamatan: "Ciawi", address: "Pancawati", status: "Aktif", scale: "Besar", source: "Internet", rating: 4.7 },
+  { id: "3", name: "Bumi Aki Signature", category: "Restoran", kecamatan: "Babakan Madang", address: "Sentul City", status: "Aktif", scale: "Besar", source: "Internet", rating: 4.9 },
+  { id: "4", name: "Santorini by dSawah", category: "Kafe", kecamatan: "Dramaga", address: "Jl. Cilubang Mekar No.2", status: "Aktif", scale: "Menengah", source: "Internet", rating: 4.6 },
+  { id: "5", name: "Anthology Coffee & Tea", category: "Kafe", kecamatan: "Babakan Madang", address: "Sentul City", status: "Aktif", scale: "Menengah", source: "Internet", rating: 4.5 },
+  { id: "6", name: "Cimory Riverside", category: "Restoran", kecamatan: "Cisarua", address: "Jl. Raya Puncak", status: "Aktif", scale: "Besar", source: "Internet", rating: 4.7 },
+  { id: "7", name: "Roofpark Bogor", category: "Restoran", kecamatan: "Bogor Tengah", address: "Jl. Raya Pajajaran No.3", status: "Aktif", scale: "Besar", source: "Internet", rating: 4.6 },
 ];
 
 export default function CulinaryPage() {
@@ -92,40 +86,18 @@ export default function CulinaryPage() {
   const [isAddOpen, setIsAddOpen] = useState(false);
   const { toast } = useToast();
 
-  // Filter Logic
   const filteredData = data.filter((item) => {
     const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
                           item.address.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesKecamatan = filterKecamatan ? item.kecamatan === filterKecamatan : true;
     const matchesKategori = filterKategori ? item.category === filterKategori : true;
-    
     return matchesSearch && matchesKecamatan && matchesKategori;
   });
 
   const handleExport = (type: 'excel' | 'pdf') => {
-    toast({
-      title: "Ekspor Berhasil",
-      description: `Data telah diekspor ke format ${type.toUpperCase()}. (Simulasi)`,
-    });
+    toast({ title: "Ekspor Berhasil", description: `Data telah diekspor ke format ${type.toUpperCase()}.` });
   };
 
-  const handleImport = () => {
-    toast({
-      title: "Impor Berhasil",
-      description: "Data dari Excel berhasil diimpor. (Simulasi)",
-    });
-  };
-
-  const handleDelete = (id: string) => {
-    setData(data.filter(item => item.id !== id));
-    toast({
-      title: "Data Dihapus",
-      description: "Data usaha berhasil dihapus dari sistem.",
-      variant: "destructive"
-    });
-  };
-
-  // Mock Form Submit
   const handleAddSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
@@ -135,12 +107,11 @@ export default function CulinaryPage() {
       category: formData.get("category") as string,
       kecamatan: formData.get("kecamatan") as string,
       address: formData.get("address") as string,
-      status: formData.get("status") as string,
-      scale: formData.get("scale") as string,
-      source: formData.get("source") as string,
-      rating: 0, // Default
+      status: "Aktif",
+      scale: "UMKM",
+      source: "Manual",
+      rating: 0,
     };
-    
     setData([...data, newItem]);
     setIsAddOpen(false);
     toast({ title: "Berhasil", description: "Data usaha baru berhasil ditambahkan" });
@@ -150,9 +121,7 @@ export default function CulinaryPage() {
     <div className="space-y-6">
       <div className="flex flex-col gap-2">
         <h1 className="text-3xl font-bold tracking-tight">Data Cafe & Resto</h1>
-        <p className="text-muted-foreground">
-          Kelola data kuliner Kabupaten Bogor: Kafe, Restoran, dan Warung.
-        </p>
+        <p className="text-muted-foreground">Kelola data kuliner Kabupaten Bogor.</p>
       </div>
 
       <div className="flex flex-col md:flex-row gap-4 justify-between items-start md:items-center bg-white p-4 rounded-lg border shadow-sm">
@@ -170,17 +139,11 @@ export default function CulinaryPage() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="gap-2">
-                <Filter className="h-4 w-4" />
-                Filter
-                {(filterKecamatan || filterKategori) && (
-                  <Badge variant="secondary" className="ml-1 h-5 px-1.5 text-[10px]">
-                    {(filterKecamatan ? 1 : 0) + (filterKategori ? 1 : 0)}
-                  </Badge>
-                )}
+                <Filter className="h-4 w-4" /> Filter
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="w-56">
-              <DropdownMenuLabel>Filter Kategori</DropdownMenuLabel>
+              <DropdownMenuLabel>Kategori</DropdownMenuLabel>
               {KATEGORI_LIST.map((kat) => (
                 <DropdownMenuCheckboxItem
                   key={kat.id}
@@ -191,7 +154,7 @@ export default function CulinaryPage() {
                 </DropdownMenuCheckboxItem>
               ))}
               <DropdownMenuSeparator />
-              <DropdownMenuLabel>Filter Kecamatan</DropdownMenuLabel>
+              <DropdownMenuLabel>Kecamatan</DropdownMenuLabel>
               <div className="max-h-48 overflow-y-auto">
                 {KECAMATAN_LIST.map((kec) => (
                   <DropdownMenuCheckboxItem
@@ -203,48 +166,22 @@ export default function CulinaryPage() {
                   </DropdownMenuCheckboxItem>
                 ))}
               </div>
-              {(filterKecamatan || filterKategori) && (
-                <>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem 
-                    className="justify-center text-primary font-medium"
-                    onClick={() => {
-                      setFilterKecamatan(null);
-                      setFilterKategori(null);
-                    }}
-                  >
-                    Reset Filter
-                  </DropdownMenuItem>
-                </>
-              )}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
 
         <div className="flex gap-2 w-full md:w-auto">
-           <DropdownMenu>
+          <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="gap-2">
                 <Download className="h-4 w-4" /> Ekspor
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuItem onClick={() => handleExport('excel')}>
-                Ekspor ke Excel (.xlsx)
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleExport('pdf')}>
-                Ekspor ke PDF
-              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleExport('excel')}>Excel (.xlsx)</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleExport('pdf')}>PDF</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-
-          <Button variant="outline" className="gap-2" onClick={handleImport}>
-            <Upload className="h-4 w-4" /> Impor Excel
-          </Button>
-
-          <Button variant="outline" className="gap-2" onClick={() => toast({ title: "Membuka Laporan", description: "Mengarahkan ke halaman laporan statistik." })}>
-            <BarChart3 className="h-4 w-4" /> Laporan
-          </Button>
 
           <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
             <DialogTrigger asChild>
@@ -252,104 +189,42 @@ export default function CulinaryPage() {
                 <Plus className="h-4 w-4" /> Tambah Data
               </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-2xl">
+            <DialogContent className="max-w-md">
               <DialogHeader>
-                <DialogTitle>Tambah Data Usaha Baru</DialogTitle>
-                <DialogDescription>
-                  Lengkapi data usaha kuliner di bawah ini. Semua field wajib diisi.
-                </DialogDescription>
+                <DialogTitle>Tambah Data Usaha</DialogTitle>
+                <DialogDescription>Lengkapi data usaha kuliner di bawah ini.</DialogDescription>
               </DialogHeader>
-              <form onSubmit={handleAddSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
-                <div className="space-y-2 col-span-2">
+              <form onSubmit={handleAddSubmit} className="space-y-4 py-4">
+                <div className="space-y-2">
                   <Label htmlFor="name">Nama Usaha</Label>
-                  <Input id="name" name="name" placeholder="Contoh: Kopi Nako Cibinong" required />
+                  <Input id="name" name="name" required />
                 </div>
-                
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Kategori</Label>
+                    <Select name="category" required>
+                      <SelectTrigger><SelectValue placeholder="Pilih" /></SelectTrigger>
+                      <SelectContent>
+                        {KATEGORI_LIST.map(k => <SelectItem key={k.id} value={k.label}>{k.label}</SelectItem>)}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Kecamatan</Label>
+                    <Select name="kecamatan" required>
+                      <SelectTrigger><SelectValue placeholder="Pilih" /></SelectTrigger>
+                      <SelectContent className="max-h-40">
+                        {KECAMATAN_LIST.map(k => <SelectItem key={k} value={k}>{k}</SelectItem>)}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
                 <div className="space-y-2">
-                  <Label htmlFor="category">Kategori Usaha</Label>
-                  <Select name="category" required>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Pilih Kategori" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {KATEGORI_LIST.map((k) => (
-                        <SelectItem key={k.id} value={k.label}>{k.label}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Label htmlFor="address">Alamat</Label>
+                  <Input id="address" name="address" required />
                 </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="kecamatan">Kecamatan</Label>
-                  <Select name="kecamatan" required>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Pilih Kecamatan" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {KECAMATAN_LIST.map((k) => (
-                        <SelectItem key={k} value={k}>{k}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2 col-span-2">
-                  <Label htmlFor="address">Alamat Lengkap</Label>
-                  <Input id="address" name="address" placeholder="Jl. Raya..." required />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="status">Status Usaha</Label>
-                  <Select name="status" required defaultValue="Aktif">
-                    <SelectTrigger>
-                      <SelectValue placeholder="Pilih Status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {STATUS_USAHA.map((s) => (
-                        <SelectItem key={s} value={s}>{s}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="scale">Skala Usaha</Label>
-                  <Select name="scale" required defaultValue="UMKM">
-                    <SelectTrigger>
-                      <SelectValue placeholder="Pilih Skala" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {SKALA_USAHA.map((s) => (
-                        <SelectItem key={s} value={s}>{s}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="source">Sumber Data</Label>
-                  <Select name="source" required defaultValue="Lapangan">
-                    <SelectTrigger>
-                      <SelectValue placeholder="Pilih Sumber" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {SUMBER_DATA.map((s) => (
-                        <SelectItem key={s} value={s}>{s}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2">
-                   <Label htmlFor="coord">Titik Koordinat (Opsional)</Label>
-                   <div className="flex gap-2">
-                     <Input placeholder="Latitude" name="lat" />
-                     <Input placeholder="Longitude" name="lng" />
-                   </div>
-                </div>
-
-                <DialogFooter className="col-span-2 mt-4">
-                  <Button type="submit">Simpan Data</Button>
+                <DialogFooter>
+                  <Button type="submit">Simpan</Button>
                 </DialogFooter>
               </form>
             </DialogContent>
@@ -365,67 +240,24 @@ export default function CulinaryPage() {
               <TableHead>Kategori</TableHead>
               <TableHead>Kecamatan</TableHead>
               <TableHead>Status</TableHead>
-              <TableHead>Skala</TableHead>
-              <TableHead>Sumber</TableHead>
               <TableHead className="w-[80px]"></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredData.length > 0 ? (
-              filteredData.map((row) => (
-                <TableRow key={row.id}>
-                  <TableCell className="font-medium">
-                    <div>{row.name}</div>
-                    <div className="text-xs text-muted-foreground truncate max-w-[200px]">{row.address}</div>
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant="outline">{row.category}</Badge>
-                  </TableCell>
-                  <TableCell>{row.kecamatan}</TableCell>
-                  <TableCell>
-                    <Badge 
-                      className={
-                        row.status === "Aktif" ? "bg-emerald-500 hover:bg-emerald-600" : 
-                        row.status === "Tutup" ? "bg-red-500 hover:bg-red-600" : 
-                        "bg-amber-500 hover:bg-amber-600"
-                      }
-                    >
-                      {row.status}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>{row.scale}</TableCell>
-                  <TableCell className="text-muted-foreground text-sm">{row.source}</TableCell>
-                  <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Aksi</DropdownMenuLabel>
-                        <DropdownMenuItem>
-                          <Pencil className="mr-2 h-4 w-4" /> Edit
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem 
-                          className="text-destructive focus:text-destructive"
-                          onClick={() => handleDelete(row.id)}
-                        >
-                          <Trash2 className="mr-2 h-4 w-4" /> Hapus
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={7} className="h-24 text-center">
-                  Tidak ada data ditemukan.
+            {filteredData.map((row) => (
+              <TableRow key={row.id}>
+                <TableCell className="font-medium">
+                  <div>{row.name}</div>
+                  <div className="text-xs text-muted-foreground">{row.address}</div>
+                </TableCell>
+                <TableCell><Badge variant="outline">{row.category}</Badge></TableCell>
+                <TableCell>{row.kecamatan}</TableCell>
+                <TableCell><Badge className="bg-emerald-500">{row.status}</Badge></TableCell>
+                <TableCell>
+                  <Button variant="ghost" size="icon"><MoreHorizontal className="h-4 w-4" /></Button>
                 </TableCell>
               </TableRow>
-            )}
+            ))}
           </TableBody>
         </Table>
       </div>

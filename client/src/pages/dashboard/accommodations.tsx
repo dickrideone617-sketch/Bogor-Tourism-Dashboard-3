@@ -12,21 +12,14 @@ import { Button } from "@/components/ui/button";
 import { 
   Plus, 
   Search, 
-  Pencil, 
-  Trash2, 
   MoreHorizontal, 
   Filter, 
   Hotel,
-  Star,
-  BarChart3,
-  TrendingUp
+  Bed
 } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
   DropdownMenuCheckboxItem,
 } from "@/components/ui/dropdown-menu";
@@ -49,10 +42,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts";
 
-// Data Constants
 const KECAMATAN_LIST = [
   "Babakan Madang", "Bojong Gede", "Caringin", "Cariu", "Ciampea", "Ciawi", 
   "Cibinong", "Cibungbulang", "Cigombong", "Cigudeg", "Cijeruk", "Cileungsi", 
@@ -63,54 +53,28 @@ const KECAMATAN_LIST = [
   "Tamansari", "Tanjungsari", "Tenjo", "Tenjolaya"
 ];
 
-const ACCOMMODATION_TYPES = [
-  "Hotel", "Villa", "Resort", "Homestay", "Glamping", "Camping Ground", "Guest House"
-];
-
-const MONTHLY_OCCUPANCY = [
-  { month: "Jan", occupancy: 65 },
-  { month: "Feb", occupancy: 72 },
-  { month: "Mar", occupancy: 58 },
-  { month: "Apr", occupancy: 80 },
-  { month: "May", occupancy: 85 },
-  { month: "Jun", occupancy: 92 },
-];
-
-// Mock Data
-const INITIAL_ACCOMMODATIONS = [
-  { id: "1", name: "Royal Safari Garden", type: "Hotel", rating: 4.5, kecamatan: "Cisarua", address: "Jl. Raya Puncak No. 601", rooms: 150 },
-  { id: "2", name: "Pullman Ciawi", type: "Resort", rating: 5.0, kecamatan: "Megamendung", address: "Jl. Raya Puncak Gadog", rooms: 200 },
-  { id: "3", name: "Novotel Bogor", type: "Hotel", rating: 4.0, kecamatan: "Sukaraja", address: "Golf Estate Bogor Raya", rooms: 120 },
-  { id: "4", name: "Aston Sentul", type: "Hotel", rating: 4.5, kecamatan: "Babakan Madang", address: "Sentul City", rooms: 180 },
-  { id: "5", name: "Villa Puncak Pass", type: "Villa", rating: 3.5, kecamatan: "Cisarua", address: "Jl. Raya Puncak", rooms: 20 },
+const INITIAL_DATA = [
+  { id: "1", name: "Pullman Ciawi Vimala Hills", type: "Resort", kecamatan: "Ciawi", rooms: 227, price: "Rp 1.5jt+", status: "Aktif" },
+  { id: "2", name: "The Botanica Sanctuary", type: "Hotel Luxury", kecamatan: "Cisarua", rooms: 160, price: "Rp 1.2jt+", status: "Aktif" },
+  { id: "3", name: "Royal Tulip Gunung Geulis", type: "Golf Resort", kecamatan: "Sukaraja", rooms: 173, price: "Rp 1.8jt+", status: "Aktif" },
+  { id: "4", name: "Aston Bogor Hotel", type: "Hotel & Resort", kecamatan: "Bogor Selatan", rooms: 223, price: "Rp 800rb+", status: "Aktif" },
+  { id: "5", name: "Royal Safari Garden", type: "Resort", kecamatan: "Cisarua", rooms: 300, price: "Rp 900rb+", status: "Aktif" },
+  { id: "6", name: "Plataran Puncak Villas", type: "Luxury Villa", kecamatan: "Cisarua", rooms: 10, price: "Rp 5jt+", status: "Aktif" },
+  { id: "7", name: "Damar Langit Resort", type: "Glamping & Villa", kecamatan: "Cisarua", rooms: 25, price: "Rp 1.1jt+", status: "Aktif" },
 ];
 
 export default function AccommodationsPage() {
-  const [data, setData] = useState(INITIAL_ACCOMMODATIONS);
+  const [data, setData] = useState(INITIAL_DATA);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterKecamatan, setFilterKecamatan] = useState<string | null>(null);
-  const [filterType, setFilterType] = useState<string | null>(null);
   const [isAddOpen, setIsAddOpen] = useState(false);
-  const [showReport, setShowReport] = useState(false);
   const { toast } = useToast();
 
   const filteredData = data.filter((item) => {
-    const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                          (item.address || "").toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesKecamatan = filterKecamatan ? item.kecamatan === filterKecamatan : true;
-    const matchesType = filterType ? item.type === filterType : true;
-    
-    return matchesSearch && matchesKecamatan && matchesType;
+    return matchesSearch && matchesKecamatan;
   });
-
-  const handleDelete = (id: string) => {
-    setData(data.filter(item => item.id !== id));
-    toast({
-      title: "Terhapus",
-      description: "Data akomodasi berhasil dihapus.",
-      variant: "destructive"
-    });
-  };
 
   const handleAddSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -120,126 +84,53 @@ export default function AccommodationsPage() {
       name: formData.get("name") as string,
       type: formData.get("type") as string,
       kecamatan: formData.get("kecamatan") as string,
-      address: formData.get("address") as string,
       rooms: parseInt(formData.get("rooms") as string) || 0,
-      rating: 0, // Default new
+      price: formData.get("price") as string,
+      status: "Aktif",
     };
-    
     setData([...data, newItem]);
     setIsAddOpen(false);
-    toast({ title: "Berhasil", description: "Akomodasi baru berhasil ditambahkan" });
+    toast({ title: "Berhasil", description: "Data akomodasi berhasil ditambahkan" });
   };
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div className="flex flex-col gap-2">
-          <h1 className="text-3xl font-bold tracking-tight">Manajemen Akomodasi</h1>
-          <p className="text-muted-foreground">
-            Data hotel, villa, resort, dan penginapan di Kabupaten Bogor.
-          </p>
-        </div>
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={() => toast({ title: "Mengunduh", description: "Data Akomodasi sedang diunduh." })} className="gap-2">
-            <Download className="h-4 w-4" /> Export
-          </Button>
-          <Button variant="outline" onClick={() => setShowReport(!showReport)} className="gap-2">
-            <BarChart3 className="h-4 w-4" />
-            {showReport ? "Tutup Laporan" : "Lihat Laporan Okupansi"}
-          </Button>
-        </div>
+      <div className="flex flex-col gap-2">
+        <h1 className="text-3xl font-bold tracking-tight">Manajemen Akomodasi</h1>
+        <p className="text-muted-foreground">Data hotel, villa, dan penginapan Kabupaten Bogor.</p>
       </div>
 
-      {showReport && (
-        <Card className="animate-in fade-in slide-in-from-top-4">
-          <CardHeader>
-            <CardTitle className="text-lg flex items-center gap-2">
-              <TrendingUp className="h-5 w-5 text-primary" />
-              Laporan Okupansi Hotel & Resort (%)
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="h-[300px] w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={MONTHLY_OCCUPANCY}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                  <XAxis dataKey="month" />
-                  <YAxis />
-                  <Tooltip />
-                  <Bar dataKey="occupancy" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      <div className="flex flex-col md:flex-row gap-4 justify-between items-start md:items-center bg-white p-4 rounded-lg border shadow-sm">
+      <div className="flex flex-col md:flex-row gap-4 justify-between items-center bg-white p-4 rounded-lg border shadow-sm">
         <div className="flex flex-1 gap-2 w-full md:w-auto">
           <div className="relative flex-1 md:max-w-sm">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Cari hotel/villa..."
+              placeholder="Cari akomodasi..."
               className="pl-8"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-          
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="gap-2">
-                <Filter className="h-4 w-4" />
-                Filter
-                {(filterKecamatan || filterType) && (
-                  <Badge variant="secondary" className="ml-1 h-5 px-1.5 text-[10px]">
-                    {(filterKecamatan ? 1 : 0) + (filterType ? 1 : 0)}
-                  </Badge>
-                )}
+                <Filter className="h-4 w-4" /> Kecamatan
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="w-56">
-              <DropdownMenuLabel>Tipe Akomodasi</DropdownMenuLabel>
-              {ACCOMMODATION_TYPES.map((t) => (
+            <DropdownMenuContent align="start" className="max-h-60 overflow-y-auto">
+              {KECAMATAN_LIST.map(k => (
                 <DropdownMenuCheckboxItem
-                  key={t}
-                  checked={filterType === t}
-                  onCheckedChange={(checked) => setFilterType(checked ? t : null)}
+                  key={k}
+                  checked={filterKecamatan === k}
+                  onCheckedChange={(checked) => setFilterKecamatan(checked ? k : null)}
                 >
-                  {t}
+                  {k}
                 </DropdownMenuCheckboxItem>
               ))}
-              <DropdownMenuSeparator />
-              <DropdownMenuLabel>Kecamatan</DropdownMenuLabel>
-              <div className="max-h-48 overflow-y-auto">
-                {KECAMATAN_LIST.map((kec) => (
-                  <DropdownMenuCheckboxItem
-                    key={kec}
-                    checked={filterKecamatan === kec}
-                    onCheckedChange={(checked) => setFilterKecamatan(checked ? kec : null)}
-                  >
-                    {kec}
-                  </DropdownMenuCheckboxItem>
-                ))}
-              </div>
-              {(filterKecamatan || filterType) && (
-                <>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem 
-                    className="justify-center text-primary font-medium"
-                    onClick={() => {
-                      setFilterKecamatan(null);
-                      setFilterType(null);
-                    }}
-                  >
-                    Reset Filter
-                  </DropdownMenuItem>
-                </>
-              )}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-
+        
         <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
           <DialogTrigger asChild>
             <Button className="gap-2">
@@ -248,124 +139,72 @@ export default function AccommodationsPage() {
           </DialogTrigger>
           <DialogContent className="max-w-md">
             <DialogHeader>
-              <DialogTitle>Tambah Akomodasi</DialogTitle>
-              <DialogDescription>
-                Masukkan data akomodasi baru secara lengkap.
-              </DialogDescription>
+              <DialogTitle>Tambah Data Penginapan</DialogTitle>
+              <DialogDescription>Masukkan detail akomodasi baru.</DialogDescription>
             </DialogHeader>
             <form onSubmit={handleAddSubmit} className="space-y-4 py-4">
               <div className="space-y-2">
                 <Label htmlFor="name">Nama Akomodasi</Label>
-                <Input id="name" name="name" placeholder="Contoh: Hotel Salak The Heritage" required />
+                <Input id="name" name="name" required />
               </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="type">Tipe Akomodasi</Label>
-                <Select name="type" required>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Pilih Tipe" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {ACCOMMODATION_TYPES.map((t) => (
-                      <SelectItem key={t} value={t}>{t}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Tipe</Label>
+                  <Input name="type" required placeholder="Hotel/Villa/Resort" />
+                </div>
+                <div className="space-y-2">
+                  <Label>Kecamatan</Label>
+                  <Select name="kecamatan" required>
+                    <SelectTrigger><SelectValue placeholder="Pilih" /></SelectTrigger>
+                    <SelectContent className="max-h-40">
+                      {KECAMATAN_LIST.map(k => <SelectItem key={k} value={k}>{k}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="kecamatan">Lokasi (Kecamatan)</Label>
-                <Select name="kecamatan" required>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Pilih Kecamatan" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {KECAMATAN_LIST.map((k) => (
-                      <SelectItem key={k} value={k}>{k}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Kamar</Label>
+                  <Input name="rooms" type="number" required />
+                </div>
+                <div className="space-y-2">
+                  <Label>Harga Mulai</Label>
+                  <Input name="price" required placeholder="Rp 0" />
+                </div>
               </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="address">Alamat Detail</Label>
-                <Input id="address" name="address" placeholder="Jalan, Desa, RT/RW..." />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="rooms">Jumlah Kamar/Unit</Label>
-                <Input id="rooms" name="rooms" type="number" placeholder="0" />
-              </div>
-
-              <DialogFooter className="mt-4">
-                <Button type="submit">Simpan Data</Button>
+              <DialogFooter>
+                <Button type="submit">Simpan</Button>
               </DialogFooter>
             </form>
           </DialogContent>
         </Dialog>
       </div>
 
-      <div className="rounded-md border bg-white shadow-sm overflow-hidden">
+      <div className="rounded-md border bg-white shadow-sm">
         <Table>
           <TableHeader className="bg-secondary/20">
             <TableRow>
               <TableHead>Nama Akomodasi</TableHead>
               <TableHead>Tipe</TableHead>
-              <TableHead>Lokasi</TableHead>
-              <TableHead>Rating</TableHead>
-              <TableHead>Jml. Kamar</TableHead>
+              <TableHead>Kecamatan</TableHead>
+              <TableHead>Kamar</TableHead>
+              <TableHead>Harga</TableHead>
               <TableHead className="w-[80px]"></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredData.length > 0 ? (
-              filteredData.map((row) => (
-                <TableRow key={row.id}>
-                  <TableCell className="font-medium">
-                    <div>{row.name}</div>
-                    <div className="text-xs text-muted-foreground truncate max-w-[200px]">{row.address}</div>
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant="secondary">{row.type}</Badge>
-                  </TableCell>
-                  <TableCell>{row.kecamatan}</TableCell>
-                  <TableCell>
-                     <div className="flex items-center gap-1 text-amber-500 font-medium">
-                      <Star className="h-3 w-3 fill-current" /> {row.rating}
-                    </div>
-                  </TableCell>
-                  <TableCell>{row.rooms}</TableCell>
-                  <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Aksi</DropdownMenuLabel>
-                        <DropdownMenuItem>
-                          <Pencil className="mr-2 h-4 w-4" /> Edit
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem 
-                          className="text-destructive focus:text-destructive"
-                          onClick={() => handleDelete(row.id)}
-                        >
-                          <Trash2 className="mr-2 h-4 w-4" /> Hapus
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={6} className="h-24 text-center">
-                  Tidak ada data ditemukan.
+            {filteredData.map((row) => (
+              <TableRow key={row.id}>
+                <TableCell className="font-medium">{row.name}</TableCell>
+                <TableCell><Badge variant="outline">{row.type}</Badge></TableCell>
+                <TableCell>{row.kecamatan}</TableCell>
+                <TableCell>{row.rooms}</TableCell>
+                <TableCell>{row.price}</TableCell>
+                <TableCell>
+                  <Button variant="ghost" size="icon"><MoreHorizontal className="h-4 w-4" /></Button>
                 </TableCell>
               </TableRow>
-            )}
+            ))}
           </TableBody>
         </Table>
       </div>
