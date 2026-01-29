@@ -13,6 +13,7 @@ import {
   Bot,
   Utensils,
   Lightbulb,
+  ShieldAlert,
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -41,6 +42,11 @@ export default function DashboardLayout({
   ];
 
   if (user?.role === "superadmin") {
+    navigation.push({
+      name: "Super Admin",
+      href: "/dashboard/super-admin",
+      icon: ShieldAlert,
+    });
     navigation.push({
       name: "Kelola Admin",
       href: "/dashboard/admin",

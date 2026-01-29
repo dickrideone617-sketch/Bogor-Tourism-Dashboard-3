@@ -4,18 +4,19 @@ import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { MapPin, Mountain } from "lucide-react";
+import { Mountain, Lock } from "lucide-react";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
-  const [role, setRole] = useState<"user" | "admin" | "superadmin">("user");
+  const [password, setPassword] = useState("");
   const { login } = useAuth();
   const [, setLocation] = useLocation();
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
+    // Simulate role based on username for prototype
+    const role = username.toLowerCase().includes("admin") ? "superadmin" : "admin";
     login(username || "Guest", role);
     setLocation("/dashboard");
   };
@@ -40,24 +41,27 @@ export default function LoginPage() {
                 <Label htmlFor="username">Username</Label>
                 <Input 
                   id="username" 
-                  placeholder="Masukkan username anda" 
+                  placeholder="Username" 
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   className="bg-white"
+                  required
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="role">Role Akses</Label>
-                <Select value={role} onValueChange={(val: any) => setRole(val)}>
-                  <SelectTrigger className="bg-white">
-                    <SelectValue placeholder="Pilih Role" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="user">User (Staff)</SelectItem>
-                    <SelectItem value="admin">Admin Dinas</SelectItem>
-                    <SelectItem value="superadmin">Super Admin</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Label htmlFor="password">Password</Label>
+                <div className="relative">
+                  <Input 
+                    id="password" 
+                    type="password"
+                    placeholder="••••••••" 
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="bg-white pl-10"
+                    required
+                  />
+                  <Lock className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                </div>
               </div>
               <Button type="submit" className="w-full bg-primary hover:bg-primary/90 mt-4">
                 Masuk Dashboard

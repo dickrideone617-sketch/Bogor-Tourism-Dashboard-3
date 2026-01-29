@@ -12,6 +12,7 @@ import AdminManagementPage from "@/pages/dashboard/admin-management";
 import AssistantPage from "@/pages/dashboard/assistant";
 import CulinaryPage from "@/pages/dashboard/culinary";
 import CreativeEconomyPage from "@/pages/dashboard/creative-economy";
+import SuperAdminPage from "@/pages/dashboard/super-admin";
 import ReportsPage from "@/pages/dashboard/reports";
 import NotFound from "@/pages/not-found";
 
@@ -27,7 +28,7 @@ function ProtectedRoute({ component: Component, ...rest }: any) {
 }
 
 function Router() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
 
   return (
     <Switch>
@@ -49,6 +50,10 @@ function Router() {
 
       <Route path="/dashboard/creative-economy">
         {() => <ProtectedRoute component={CreativeEconomyPage} />}
+      </Route>
+
+      <Route path="/dashboard/super-admin">
+        {() => user?.role === "superadmin" ? <ProtectedRoute component={SuperAdminPage} /> : <Redirect to="/dashboard" />}
       </Route>
 
       <Route path="/dashboard/assistant">

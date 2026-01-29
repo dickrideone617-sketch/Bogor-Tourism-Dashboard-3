@@ -53,10 +53,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts";
 
 const SECTORS = [
-  "Fashion", "Kriya", "Kuliner", "Fotografi", "Musik", "Film & Animasi", "Aplikasi", "Desain Interior"
+  "Pengembangan Permainan", "Arsitektur", "Desain Interior", "Musik", "Desain Produk",
+  "Fashion", "Desain Komunikasi Visual", "Kuliner", "Film, Animasi dan Video",
+  "Fotografi", "Kriya", "Televisi dan Radio", "Periklanan", "Seni Pertunjukan",
+  "Penerbitan", "Seni Rupa", "Aplikasi"
 ];
 
-const KECAMATAN_LIST = [
+const KECAMATAN_BOGOR = [
   "Babakan Madang", "Bojong Gede", "Caringin", "Cariu", "Ciampea", "Ciawi", 
   "Cibinong", "Cibungbulang", "Cigombong", "Cigudeg", "Cijeruk", "Cileungsi", 
   "Ciomas", "Cisarua", "Ciseeng", "Citeureup", "Dramaga", "Gunung Putri", 
@@ -70,7 +73,7 @@ const INITIAL_DATA = [
   { id: "1", name: "Batik Bogor Tradisiku", sector: "Fashion", kecamatan: "Tanah Sareal", owner: "Siti Fatimah", employees: 15, revenue: "Rp 50jt/bln" },
   { id: "2", name: "Bogor Raincake", sector: "Kuliner", kecamatan: "Bogor Tengah", owner: "Syahrini", employees: 40, revenue: "Rp 250jt/bln" },
   { id: "3", name: "Kerajinan Bambu Kreatif", sector: "Kriya", kecamatan: "Ciampea", owner: "Ahmad", employees: 8, revenue: "Rp 15jt/bln" },
-  { id: "4", name: "Studio Animasi Bogor", sector: "Film & Animasi", kecamatan: "Cibinong", owner: "Budi", employees: 25, revenue: "Rp 120jt/bln" },
+  { id: "4", name: "Studio Animasi Bogor", sector: "Film, Animasi dan Video", kecamatan: "Cibinong", owner: "Budi", employees: 25, revenue: "Rp 120jt/bln" },
 ];
 
 const MONTHLY_VISITS = [
@@ -190,7 +193,7 @@ export default function CreativeEconomyPage() {
                 <Filter className="h-4 w-4" /> Filter Sektor
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="start">
+            <DropdownMenuContent align="start" className="max-h-80 overflow-y-auto">
               {SECTORS.map(s => (
                 <DropdownMenuCheckboxItem
                   key={s}
@@ -227,7 +230,7 @@ export default function CreativeEconomyPage() {
                     <SelectTrigger>
                       <SelectValue placeholder="Pilih Sektor" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="max-h-60">
                       {SECTORS.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
                     </SelectContent>
                   </Select>
@@ -238,8 +241,8 @@ export default function CreativeEconomyPage() {
                     <SelectTrigger>
                       <SelectValue placeholder="Pilih Kecamatan" />
                     </SelectTrigger>
-                    <SelectContent>
-                      {KECAMATAN_LIST.map(k => <SelectItem key={k} value={k}>{k}</SelectItem>)}
+                    <SelectContent className="max-h-60">
+                      {KECAMATAN_BOGOR.map(k => <SelectItem key={k} value={k}>{k}</SelectItem>)}
                     </SelectContent>
                   </Select>
                 </div>
