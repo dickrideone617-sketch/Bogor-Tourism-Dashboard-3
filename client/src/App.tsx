@@ -13,6 +13,7 @@ import AssistantPage from "@/pages/dashboard/assistant";
 import CulinaryPage from "@/pages/dashboard/culinary";
 import CreativeEconomyPage from "@/pages/dashboard/creative-economy";
 import SuperAdminPage from "@/pages/dashboard/super-admin";
+import VisitorAnalyticsPage from "@/pages/dashboard/visitor-analytics";
 import ReportsPage from "@/pages/dashboard/reports";
 import NotFound from "@/pages/not-found";
 
@@ -54,6 +55,10 @@ function Router() {
 
       <Route path="/dashboard/super-admin">
         {() => user?.role === "superadmin" ? <ProtectedRoute component={SuperAdminPage} /> : <Redirect to="/dashboard" />}
+      </Route>
+
+      <Route path="/dashboard/analytics">
+        {() => <ProtectedRoute component={VisitorAnalyticsPage} />}
       </Route>
 
       <Route path="/dashboard/assistant">

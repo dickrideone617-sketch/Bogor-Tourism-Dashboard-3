@@ -21,7 +21,9 @@ import {
   Coffee, 
   Utensils, 
   Store,
-  BarChart3
+  BarChart3,
+  TrendingUp,
+  Users
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -51,6 +53,17 @@ import {
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "recharts";
+
+const SALES_DATA = [
+  { month: "Jan", sales: 1200 },
+  { month: "Feb", sales: 1450 },
+  { month: "Mar", sales: 1100 },
+  { month: "Apr", sales: 1800 },
+  { month: "Mei", sales: 2200 },
+  { month: "Jun", sales: 2600 },
+];
 
 const KECAMATAN_LIST = [
   "Babakan Madang", "Bojong Gede", "Caringin", "Cariu", "Ciampea", "Ciawi", 
@@ -84,6 +97,7 @@ export default function CulinaryPage() {
   const [filterKecamatan, setFilterKecamatan] = useState<string | null>(null);
   const [filterKategori, setFilterKategori] = useState<string | null>(null);
   const [isAddOpen, setIsAddOpen] = useState(false);
+  const [showReport, setShowReport] = useState(false);
   const { toast } = useToast();
 
   const filteredData = data.filter((item) => {
@@ -123,6 +137,32 @@ export default function CulinaryPage() {
         <h1 className="text-3xl font-bold tracking-tight">Data Cafe & Resto</h1>
         <p className="text-muted-foreground">Kelola data kuliner Kabupaten Bogor.</p>
       </div>
+
+      <div className="flex gap-2 justify-end">
+        <Button variant="outline" onClick={() => setShowReport(!showReport)} className="gap-2">
+          <BarChart3 className="h-4 w-4" /> {showReport ? "Sembunyikan Grafik" : "Lihat Grafik Transaksi"}
+        </Button>
+      </div>
+
+      {showReport && (
+        <Card className="bg-white">
+          <CardHeader>
+            <CardTitle className="text-lg">Tren Transaksi Bulanan (Rata-rata)</CardTitle>
+          </CardHeader>
+          <CardContent className="h-[300px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={SALES_DATA}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                <XAxis dataKey="month" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Line type="monotone" dataKey="sales" name="Total Transaksi" stroke="#f59e0b" strokeWidth={2} dot={{ r: 4 }} />
+              </LineChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+      )}
 
       <div className="flex flex-col md:flex-row gap-4 justify-between items-start md:items-center bg-white p-4 rounded-lg border shadow-sm">
         <div className="flex flex-1 gap-2 w-full md:w-auto">

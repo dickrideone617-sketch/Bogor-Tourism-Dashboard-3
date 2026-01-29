@@ -18,7 +18,10 @@ import {
   Filter, 
   Download,
   MapPin,
-  Mountain
+  Mountain,
+  BarChart3,
+  TrendingUp,
+  Users
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -48,6 +51,17 @@ import {
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "recharts";
+
+const VISIT_DATA = [
+  { month: "Jan", lokal: 4500, manca: 320 },
+  { month: "Feb", lokal: 5200, manca: 450 },
+  { month: "Mar", lokal: 4800, manca: 280 },
+  { month: "Apr", lokal: 6100, manca: 600 },
+  { month: "Mei", lokal: 7500, manca: 850 },
+  { month: "Jun", lokal: 8200, manca: 1200 },
+];
 
 const KECAMATAN_LIST = [
   "Babakan Madang", "Bojong Gede", "Caringin", "Cariu", "Ciampea", "Ciawi", 
@@ -74,6 +88,7 @@ export default function SpotsPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterKecamatan, setFilterKecamatan] = useState<string | null>(null);
   const [isAddOpen, setIsAddOpen] = useState(false);
+  const [showReport, setShowReport] = useState(false);
   const { toast } = useToast();
 
   const filteredData = data.filter((item) => {
@@ -105,6 +120,57 @@ export default function SpotsPage() {
         <h1 className="text-3xl font-bold tracking-tight">Manajemen Objek Wisata</h1>
         <p className="text-muted-foreground">Data destinasi wisata Kabupaten Bogor.</p>
       </div>
+
+      <div className="flex gap-2 justify-end">
+        <Button variant="outline" onClick={() => setShowReport(!showReport)} className="gap-2">
+          <BarChart3 className="h-4 w-4" /> {showReport ? "Sembunyikan Grafik" : "Lihat Tren Kunjungan"}
+        </Button>
+      </div>
+
+      {showReport && (
+        <div className="grid gap-4 md:grid-cols-3">
+          <Card className="md:col-span-2">
+            <CardHeader>
+              <CardTitle className="text-lg">Statistik Kunjungan Bulanan</CardTitle>
+            </CardHeader>
+            <CardContent className="h-[300px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={VISIT_DATA}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                  <XAxis dataKey="month" />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend />
+                  <Area type="monotone" dataKey="lokal" name="Lokal" stroke="#0ea5e9" fill="#0ea5e9" fillOpacity={0.1} />
+                  <Area type="monotone" dataKey="manca" name="Mancanegara" stroke="#22c55e" fill="#22c55e" fillOpacity={0.1} />
+                </AreaChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+          <div className="space-y-4">
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium">Wisatawan Bulan Ini</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">9,400</div>
+                <p className="text-xs text-emerald-600 flex items-center gap-1">
+                  <TrendingUp className="h-3 w-3" /> +12% dari bulan lalu
+                </p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium">Destinasi Terpopuler</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="font-bold">Taman Safari</div>
+                <p className="text-xs text-muted-foreground">Cisarua, Bogor</p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      )}
 
       <div className="flex flex-col md:flex-row gap-4 justify-between items-center bg-white p-4 rounded-lg border shadow-sm">
         <div className="flex flex-1 gap-2 w-full md:w-auto">

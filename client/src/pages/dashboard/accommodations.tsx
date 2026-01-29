@@ -15,7 +15,10 @@ import {
   MoreHorizontal, 
   Filter, 
   Hotel,
-  Bed
+  Bed,
+  BarChart3,
+  TrendingUp,
+  Users
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -42,6 +45,17 @@ import {
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "recharts";
+
+const OCCUPANCY_DATA = [
+  { month: "Jan", rate: 65 },
+  { month: "Feb", rate: 68 },
+  { month: "Mar", rate: 62 },
+  { month: "Apr", rate: 75 },
+  { month: "Mei", rate: 82 },
+  { month: "Jun", rate: 90 },
+];
 
 const KECAMATAN_LIST = [
   "Babakan Madang", "Bojong Gede", "Caringin", "Cariu", "Ciampea", "Ciawi", 
@@ -68,6 +82,7 @@ export default function AccommodationsPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterKecamatan, setFilterKecamatan] = useState<string | null>(null);
   const [isAddOpen, setIsAddOpen] = useState(false);
+  const [showReport, setShowReport] = useState(false);
   const { toast } = useToast();
 
   const filteredData = data.filter((item) => {
@@ -99,6 +114,31 @@ export default function AccommodationsPage() {
         <h1 className="text-3xl font-bold tracking-tight">Manajemen Akomodasi</h1>
         <p className="text-muted-foreground">Data hotel, villa, dan penginapan Kabupaten Bogor.</p>
       </div>
+
+      <div className="flex gap-2 justify-end">
+        <Button variant="outline" onClick={() => setShowReport(!showReport)} className="gap-2">
+          <BarChart3 className="h-4 w-4" /> {showReport ? "Sembunyikan Laporan" : "Lihat Okupansi"}
+        </Button>
+      </div>
+
+      {showReport && (
+        <Card className="bg-white">
+          <CardHeader>
+            <CardTitle className="text-lg">Rata-rata Tingkat Hunian (Okupansi) %</CardTitle>
+          </CardHeader>
+          <CardContent className="h-[300px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={OCCUPANCY_DATA}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                <XAxis dataKey="month" />
+                <YAxis />
+                <Tooltip />
+                <Bar dataKey="rate" name="Okupansi (%)" fill="#0ea5e9" radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+      )}
 
       <div className="flex flex-col md:flex-row gap-4 justify-between items-center bg-white p-4 rounded-lg border shadow-sm">
         <div className="flex flex-1 gap-2 w-full md:w-auto">

@@ -37,6 +37,7 @@ export default function DashboardLayout({
     { name: "Akomodasi", href: "/dashboard/accommodations", icon: Hotel },
     { name: "Ekonomi Kreatif", href: "/dashboard/creative-economy", icon: Lightbulb },
     { name: "Cafe & Resto", href: "/dashboard/culinary", icon: Utensils },
+    { name: "Analitik Kunjungan", href: "/dashboard/analytics", icon: TrendingUp },
     { name: "AI Assistant", href: "/dashboard/assistant", icon: Bot },
     { name: "Laporan", href: "/dashboard/reports", icon: FileText },
   ];
